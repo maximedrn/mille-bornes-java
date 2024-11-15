@@ -1,6 +1,6 @@
 package com.mille_bornes.utils;
 
-enum StateEnum {
+public enum StateEnum {
     MARCHE,
     PANNE,
     CREVAISON,
