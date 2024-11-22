@@ -1,9 +1,10 @@
-package com.mille_bornes.utils;
+package com.mille_bornes.game.utils;
 
 public enum StateEnum {
     MARCHE,
     PANNE,
     CREVAISON,
+    ACCIDENT,
     ARRET,
     LIMITATION,
     CITERNE,

@@ -1,6 +1,7 @@
-package com.mille_bornes.players;
-import com.mille_bornes.utils.StateEnum;
-import com.mille_bornes.cards.*;
+package com.mille_bornes.game.players;
+
+import com.mille_bornes.game.cards.*;
+import com.mille_bornes.game.utils.StateEnum;
 import java.util.ArrayList;
 
 public abstract class Player {
@@ -61,12 +62,22 @@ public abstract class Player {
         }
     }
 
+    public void delCard(Card card){
+        if((card != null) && (hasCard(card))){
+            deck.remove(card);
+        }
+    }
+
     public void clearDeck(){
         deck.clear();
     }
 
     public int deckSize(){
         return deck.size();
+    }
+
+    public boolean hasCard(Card card){
+        return deck.contains(card);
     }
 
     public StateEnum getState(int index){
@@ -85,8 +96,18 @@ public abstract class Player {
         }
     }
 
+    public void delState(StateEnum state){
+        if((state != null) && (hasState(state))){
+            states.remove(state);
+        }
+    }
+
     public void clearStates(){
         states.clear();
+    }
+
+    public boolean hasState(StateEnum state){
+        return states.contains(state);
     }
 
     public int statesSize(){
