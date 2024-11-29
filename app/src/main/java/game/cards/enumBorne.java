@@ -18,6 +18,6 @@ public enum enumBorne {
 
     @Override
     public String toString() {
-        return "Borne " + valeur;
+        return "Borne: " + valeur;
     }
 }
