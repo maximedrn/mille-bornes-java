@@ -5,13 +5,13 @@ import com.mille_bornes.game.utils.StateEnum;
 import java.util.ArrayList;
 
 public abstract class Player {
-    private String name;
-    private int globalScore;
-    private int gameScore;
-    private ArrayList<Card> deck;
-    private ArrayList<StateEnum> states;
-    private boolean play;
-    private boolean discard;
+    protected String name;
+    protected int globalScore;
+    protected int gameScore;
+    protected ArrayList<Card> deck;
+    protected ArrayList<StateEnum> states;
+    protected boolean play;
+    protected boolean discard;
 
     public Player(String name){
         this.name = name;

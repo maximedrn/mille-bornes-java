@@ -1,10 +1,9 @@
 package com.mille_bornes.game.cards.botte;
 
-import com.mille_bornes.game.cards.Card;
 import com.mille_bornes.game.players.Player;
 import com.mille_bornes.game.utils.StateEnum;
 
-public class DrivingAceCard extends Card {
+public class DrivingAceCard extends BotteCard {
 
     public DrivingAceCard(){
         super("as du volant");
@@ -14,11 +13,16 @@ public class DrivingAceCard extends Card {
         return true;
     }
 
+    public boolean isCoupFourre(Player player) {
+        return player.hasState(StateEnum.ACCIDENT);
+    }
+
     public void action(Player player) {
+        setCoupFourre(false);
         player.addState(StateEnum.AS_DU_VOLANT);
-        if(player.hasState(StateEnum.ACCIDENT)){
+        if(isCoupFourre(player)){
+            setCoupFourre(true);
             player.delState(StateEnum.ACCIDENT);
         }
     }
-    
 }
