@@ -8,6 +8,9 @@ public class SpeedyCPUPlayer extends CPUPlayer {
         super("bot 2");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public Card cpustrategy(List<Player> opponents) {
         return null;
     }

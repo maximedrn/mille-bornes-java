@@ -9,14 +9,23 @@ public class UnbreakableCard extends BotteCard {
         super("increvable");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public boolean isPlayable(Player player) {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public boolean isCoupFourre(Player player) {
         return player.hasState(StateEnum.CREVAISON);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void action(Player player) {
         setCoupFourre(false);
         player.addState(StateEnum.INCREVABLE);

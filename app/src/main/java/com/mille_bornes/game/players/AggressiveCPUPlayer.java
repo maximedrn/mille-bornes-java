@@ -15,6 +15,9 @@ public class AggressiveCPUPlayer extends CPUPlayer {
         super("bot 1");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public Card cpustrategy(List<Player> opponents) {
         ArrayList<Card> attackDeck = new ArrayList<>();
         ArrayList<Card> borneDeck = new ArrayList<>();

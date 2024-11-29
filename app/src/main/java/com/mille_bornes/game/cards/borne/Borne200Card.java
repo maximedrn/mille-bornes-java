@@ -10,6 +10,9 @@ public class Borne200Card extends BorneCard {
         super(BorneEnum.BORNE_100);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public boolean isPlayable(Player player) {
         return !player.hasState(StateEnum.ARRET) && !player.hasState(StateEnum.CREVAISON) && !player.hasState(StateEnum.PANNE) && !player.hasState(StateEnum.ACCIDENT) && !player.hasState(StateEnum.LIMITATION);
     }

@@ -10,10 +10,16 @@ public class DriveCard extends Card {
         super("feu vert");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public boolean isPlayable(Player player) {
         return player.hasState(StateEnum.ARRET);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void action(Player player) {
         player.delState(StateEnum.ARRET);
     }

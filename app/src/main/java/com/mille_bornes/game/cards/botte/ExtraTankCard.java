@@ -9,14 +9,23 @@ public class ExtraTankCard extends BotteCard {
         super("citerne");
     }
 
+    /**
+     * {@inheritDoc}
+    */
     public boolean isPlayable(Player player) {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public boolean isCoupFourre(Player player) {
         return player.hasState(StateEnum.PANNE);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void action(Player player) {
         setCoupFourre(false);
         player.addState(StateEnum.CITERNE);

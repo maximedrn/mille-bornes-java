@@ -9,14 +9,23 @@ public class DrivingAceCard extends BotteCard {
         super("as du volant");
     }
 
+    /**
+     * {@inheritDoc}
+    */
     public boolean isPlayable(Player player) {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+    */
     public boolean isCoupFourre(Player player) {
         return player.hasState(StateEnum.ACCIDENT);
     }
 
+    /**
+     * {@inheritDoc}
+    */
     public void action(Player player) {
         setCoupFourre(false);
         player.addState(StateEnum.AS_DU_VOLANT);

@@ -10,10 +10,16 @@ public class RepairCard extends Card {
         super("reparation");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public boolean isPlayable(Player player) {
         return player.hasState(StateEnum.ACCIDENT);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void action(Player player) {
         player.delState(StateEnum.ACCIDENT);
     }

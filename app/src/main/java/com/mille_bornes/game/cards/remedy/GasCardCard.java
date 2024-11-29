@@ -10,10 +10,16 @@ public class GasCardCard extends Card {
         super("essence");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public boolean isPlayable(Player player) {
         return player.hasState(StateEnum.PANNE);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void action(Player player) {
         player.delState(StateEnum.PANNE);
     }

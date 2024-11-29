@@ -10,10 +10,16 @@ public class SpareTireCard extends Card {
         super("roue de secours");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public boolean isPlayable(Player player) {
         return player.hasState(StateEnum.CREVAISON);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void action(Player player) {
         player.delState(StateEnum.CREVAISON);
     }

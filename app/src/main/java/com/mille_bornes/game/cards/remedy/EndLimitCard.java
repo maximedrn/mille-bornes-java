@@ -10,10 +10,16 @@ public class EndLimitCard extends Card {
         super("fin de limitation");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public boolean isPlayable(Player player) {
         return player.hasState(StateEnum.LIMITATION);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void action(Player player) {
         player.delState(StateEnum.LIMITATION);
     }

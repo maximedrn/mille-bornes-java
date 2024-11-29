@@ -9,14 +9,23 @@ public class PrioritaryCard extends BotteCard {
         super("prioritaire");
     }
 
+    /**
+     * {@inheritDoc}
+    */
     public boolean isPlayable(Player player) {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+    */
     public boolean isCoupFourre(Player player) {
         return player.hasState(StateEnum.ARRET) || player.hasState(StateEnum.LIMITATION);
     }
 
+    /**
+     * {@inheritDoc}
+    */
     public void action(Player player) {
         setCoupFourre(false);
         player.addState(StateEnum.PRIORITAIRE);
