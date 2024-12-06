@@ -1,12 +1,32 @@
 package com.mille_bornes.database.data;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+
+enum GameStatus {
+    IN_PROGRESS,
+    FINISHED;
+
+    /**
+     * @return the lowercase name of the enum constant.
+     */
+    @Override
+    public String toString() {
+        return this.name().toLowerCase();
+    }
+}
 
 
 @Entity
@@ -14,50 +34,84 @@ import jakarta.persistence.Version;
 public class Game {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
 
     @Version
-    private Long version;
+    private Integer version;
 
-    @Column(name = "start_time", nullable = false)
-    private String startTime;
+    @Column(
+        name = "created_at",
+        nullable = false,
+        updatable = false
+    )
+    private LocalDateTime createdAt = LocalDateTime.now();
 
-    @Column(name = "end_time")
-    private String endTime;
+    @Column(nullable = false)
+    private String status = GameStatus.IN_PROGRESS.toString();
 
-    @Column(name = "winner")
-    private String winner;
+    @OneToMany(
+        mappedBy = "game",
+        cascade = CascadeType.ALL,
+        orphanRemoval = true
+    )
+    private List<Player> players = new ArrayList<Player>();
 
-    public int getId() {
+    @OneToMany(
+        mappedBy = "game",
+        cascade = CascadeType.ALL,
+        orphanRemoval = true
+    )
+    private List<Card> cards = new ArrayList<Card>();
+
+    @OneToMany(
+        mappedBy = "game",
+        cascade = CascadeType.ALL,
+        orphanRemoval = true
+    )
+    private List<Round> rounds = new ArrayList<Round>();
+
+    public String getId() {
         return this.id;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public GameStatus getStatus() {
+        return GameStatus.valueOf(this.status.toUpperCase());
     }
 
-    public String getStartTime() {
-        return this.startTime;
+    public void setStatus(final GameStatus status) {
+        this.status = status.toString();
     }
 
-    public void setStartTime(String startTime) {
-        this.startTime = startTime;
+    public List<Player> getPlayers() {
+        return this.players;
     }
 
-    public String getEndTime() {
-        return this.endTime;
+    public void addPlayer(final Player player) {
+        this.players.add(player);
     }
 
-    public void setEndTime(String endTime) {
-        this.endTime = endTime;
+    public void addPlayers(final List<Player> players) {
+        this.players.addAll(players);
     }
 
-    public String getWinner() {
-        return this.winner;
+    public List<Card> getCards() {
+        return this.cards;
     }
 
-    public void setWinner(String winner) {
-        this.winner = winner;
+    public void addCard(final Card card) {
+        this.cards.add(card);
+    }
+
+    public void addCards(final List<Card> cards) {
+        this.cards.addAll(cards);
+    }
+
+    public List<Round> getRounds() {
+        return this.rounds;
+    }
+
+    public void addRound(final Round round) {
+        this.rounds.add(round);
     }
 }
