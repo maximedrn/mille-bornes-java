@@ -52,7 +52,7 @@ public abstract class BorneCard extends Card implements Comparable<Card> {
      * @return a negative integer, zero, or a positive integer as this Card
      *         is less than, equal to, or greater than the specified Card
      */
-    public int compareTo(Card card) {
-        return borne.getValue() - card.getValue();
+    public int compareTo(BorneCard card) {
+        return borne.getValue() - card.getBorneValue();
     }
 }

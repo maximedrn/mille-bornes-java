@@ -10,6 +10,8 @@ import com.mille_bornes.game.cards.Card;
 import com.mille_bornes.game.cards.attack.AttackCard;
 import com.mille_bornes.game.cards.borne.BorneCard;
 import com.mille_bornes.game.cards.botte.BotteCard;
+import com.mille_bornes.game.cards.botte.PrioritaryCard;
+import com.mille_bornes.game.cards.remedy.EndLimitCard;
 import com.mille_bornes.game.utils.StateEnum;
 
 public class AggressiveCPUPlayer extends CPUPlayer {
@@ -55,7 +57,8 @@ public class AggressiveCPUPlayer extends CPUPlayer {
             if(!attackList.isEmpty()){
                 SimpleEntry<Player, Card> attack = attackList.get(rand.nextInt(attackList.size()));
                 attack.getValue().action(attack.getKey());
-                playCard(attack.getValue());
+                playCard();
+                delCard(attack.getValue());
                 return attack.getValue();
             }
         }
@@ -73,14 +76,16 @@ public class AggressiveCPUPlayer extends CPUPlayer {
                     if((this.hasCard(new PrioritaryCard())) && (rand.nextDouble() < 0.5)){
                         Card card = getCard(getCardIndex(new PrioritaryCard()));
                         card.action(this);
-                        playCard(card);
+                        playCard();
+                        delCard(card);
                         return card;
                     }
 
                     if((this.hasCard(new EndLimitCard())) && (rand.nextDouble() < 0.5)){
                         Card card = getCard(getCardIndex(new EndLimitCard()));
                         card.action(this);
-                        playCard(card);
+                        playCard();
+                        delCard(card);
                         return card;
                     }
                 }
@@ -88,7 +93,8 @@ public class AggressiveCPUPlayer extends CPUPlayer {
                 borneList.sort(Comparator.reverseOrder());
                 Card card = borneList.get(0);
                 card.action(this);
-                playCard(card);
+                playCard();
+                delCard(card);
                 return card;
             }
         }
@@ -96,7 +102,7 @@ public class AggressiveCPUPlayer extends CPUPlayer {
         if(!botteDeck.isEmpty()){
             ArrayList<Card> botteList = new ArrayList<>();
             for(Card card : botteDeck){
-                if((BotteCard) card.isCoupFourre(this)){
+                if((boolean) ((BotteCard) card.isCoupFourre(this))){
                     botteList.add(card);
                 }
             }

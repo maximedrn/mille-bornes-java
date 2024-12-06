@@ -54,4 +54,11 @@ public class HumanPlayer extends Player {
         delCard(card);
         return card;
     }
+
+    public boolean play(Card card, Player opponent){
+        if(card.getClass()){
+
+        }
+        return false;
+    }
 }
