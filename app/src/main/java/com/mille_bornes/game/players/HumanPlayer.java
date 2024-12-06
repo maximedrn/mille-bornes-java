@@ -1,6 +1,5 @@
 package com.mille_bornes.game.players;
 
-import java.util.List;
 import com.mille_bornes.game.cards.Card;
 import com.mille_bornes.game.cards.attack.AttackCard;
 
