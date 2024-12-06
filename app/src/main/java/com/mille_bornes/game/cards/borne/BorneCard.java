@@ -8,7 +8,7 @@ import com.mille_bornes.game.utils.BorneEnum;
  * Abstract class representing a borne card in the Mille Bornes game.
  * This class extends the Card class and provides functionality specific to borne cards.
  */
-public abstract class BorneCard extends Card implements Comparable<Card> {
+public abstract class BorneCard extends Card implements Comparable<BorneCard> {
 
     private BorneEnum borne;
     
@@ -52,7 +52,5 @@ public abstract class BorneCard extends Card implements Comparable<Card> {
      * @return a negative integer, zero, or a positive integer as this Card
      *         is less than, equal to, or greater than the specified Card
      */
-    public int compareTo(BorneCard card) {
-        return borne.getValue() - card.getBorneValue();
-    }
+    public abstract int compareTo(BorneCard card);
 }

@@ -17,4 +17,11 @@ public class Borne200Card extends BorneCard {
         return !player.hasState(StateEnum.ARRET) && !player.hasState(StateEnum.CREVAISON) && !player.hasState(StateEnum.PANNE) && !player.hasState(StateEnum.ACCIDENT) && !player.hasState(StateEnum.LIMITATION) && (player.getGameScore() + getBorneValue() <= 700);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public int compareTo(BorneCard card) {
+        return this.getBorneValue() - card.getBorneValue();
+    }
+
 }

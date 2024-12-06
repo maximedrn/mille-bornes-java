@@ -4,8 +4,6 @@ import com.mille_bornes.game.cards.*;
 import com.mille_bornes.game.utils.StateEnum;
 import java.util.ArrayList;
 
-import javax.smartcardio.Card;
-
 /**
  * Abstract class representing a player in the Mille Bornes game.
  */

@@ -10,6 +10,8 @@ import com.mille_bornes.game.cards.Card;
 import com.mille_bornes.game.cards.attack.AttackCard;
 import com.mille_bornes.game.cards.borne.BorneCard;
 import com.mille_bornes.game.cards.botte.BotteCard;
+import com.mille_bornes.game.cards.botte.PrioritaryCard;
+import com.mille_bornes.game.cards.remedy.EndLimitCard;
 import com.mille_bornes.game.utils.StateEnum;
 
 public class SpeedyCPUPlayer extends CPUPlayer {
@@ -21,49 +23,30 @@ public class SpeedyCPUPlayer extends CPUPlayer {
      * {@inheritDoc}
      */
     public Card CPUStrategy(List<Player> opponents) {
-        ArrayList<Card> attackDeck = new ArrayList<>();
-        ArrayList<Card> borneDeck = new ArrayList<>();
+        ArrayList<AttackCard> attackDeck = new ArrayList<>();
+        ArrayList<BorneCard> borneDeck = new ArrayList<>();
         ArrayList<Card> defenseDeck = new ArrayList<>();
-        ArrayList<Card> botteDeck = new ArrayList<>();
+        ArrayList<BotteCard> botteDeck = new ArrayList<>();
         Random rand = new Random();
 
         for(Card card : deck){
-            if(card.getClass() == AttackCard.class){
-                attackDeck.add(card);
+            if(card instanceof AttackCard){
+                attackDeck.add((AttackCard) card);
             }
-            else if(card.getClass() == BorneCard.class){
-                borneDeck.add(card);
+            else if(card instanceof BorneCard){
+                borneDeck.add((BorneCard) card);
             }
-            else if(card.getClass() == BotteCard.class){
-                botteDeck.add(card);
+            else if(card instanceof BotteCard){
+                botteDeck.add((BotteCard) card);
             }
             else{
                 defenseDeck.add(card);
             }
         }
 
-        if(!attackDeck.isEmpty()){
-            ArrayList<SimpleEntry<Player,Card>> attackList = new ArrayList<>();
-            for(Player opponent : opponents){
-                for(Card card : attackDeck){
-                    if(card.isPlayable(opponent)){
-                        attackList.add(new SimpleEntry<>(opponent, card));
-                    }
-                }
-            }
-
-            if(!attackList.isEmpty()){
-                SimpleEntry<Player, Card> attack = attackList.get(rand.nextInt(attackList.size()));
-                attack.getValue().action(attack.getKey());
-                playCard();
-                delCard(attack.getValue());
-                return attack.getValue();
-            }
-        }
-
         if((!borneDeck.isEmpty()) && (rand.nextDouble() < 0.7)){
-            ArrayList<Card> borneList = new ArrayList<>();
-            for(Card card : borneDeck){
+            ArrayList<BorneCard> borneList = new ArrayList<>();
+            for(BorneCard card : borneDeck){
                 if(card.isPlayable(this)){
                     borneList.add(card);
                 }
@@ -98,9 +81,9 @@ public class SpeedyCPUPlayer extends CPUPlayer {
         }
 
         if(!botteDeck.isEmpty()){
-            ArrayList<Card> botteList = new ArrayList<>();
-            for(Card card : botteDeck){
-                if((BotteCard) card.isCoupFourre(this)){
+            ArrayList<BotteCard> botteList = new ArrayList<>();
+            for(BotteCard card : botteDeck){
+                if((boolean) card.isCoupFourre(this)){
                     botteList.add(card);
                 }
             }
@@ -113,7 +96,7 @@ public class SpeedyCPUPlayer extends CPUPlayer {
                 return card;
             } 
             
-            else if(rand.nextDouble() < 0.4){
+            else if(rand.nextDouble() < 0.5){
                 Card card = botteDeck.get(rand.nextInt(botteDeck.size()));
                 card.action(this);
                 playCard();
@@ -139,6 +122,25 @@ public class SpeedyCPUPlayer extends CPUPlayer {
             }
         }
 
+        if(attackDeck.isEmpty()){
+            ArrayList<SimpleEntry<Player,AttackCard>> attackList = new ArrayList<>();
+            for(Player opponent : opponents){
+                for(AttackCard card : attackDeck){
+                    if(card.isPlayable(opponent)){
+                        attackList.add(new SimpleEntry<>(opponent, card));
+                    }
+                }
+            }
+
+            if(!attackList.isEmpty()){
+                SimpleEntry<Player, AttackCard> attack = attackList.get(rand.nextInt(attackList.size()));
+                attack.getValue().action(attack.getKey());
+                playCard();
+                delCard(attack.getValue());
+                return attack.getValue();
+            }
+        }
+
         Card card = null;
         while(card == null){
             card = getCard(rand.nextInt(deckSize()));
@@ -146,6 +148,7 @@ public class SpeedyCPUPlayer extends CPUPlayer {
                 card = null;
             }
         }
+
         discardCard();
         delCard(card);
         return card;

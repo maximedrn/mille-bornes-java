@@ -2,6 +2,7 @@ package com.mille_bornes.game.players;
 
 import java.util.List;
 import com.mille_bornes.game.cards.Card;
+import com.mille_bornes.game.cards.attack.AttackCard;
 
 /**
  * Represents a human player in the Mille Bornes game.
@@ -56,8 +57,18 @@ public class HumanPlayer extends Player {
     }
 
     public boolean play(Card card, Player opponent){
-        if(card.getClass()){
+        if(card instanceof AttackCard){
+            if(card.isPlayable(opponent)){
+                card.action(opponent);
+                return true;
+            }
+        }
 
+        else {
+            if(card.isPlayable(this)){
+                card.action(this);
+                return true;
+            }
         }
         return false;
     }

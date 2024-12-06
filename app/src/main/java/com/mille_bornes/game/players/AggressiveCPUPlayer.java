@@ -23,21 +23,21 @@ public class AggressiveCPUPlayer extends CPUPlayer {
      * {@inheritDoc}
      */
     public Card CPUStrategy(List<Player> opponents) {
-        ArrayList<Card> attackDeck = new ArrayList<>();
-        ArrayList<Card> borneDeck = new ArrayList<>();
+        ArrayList<AttackCard> attackDeck = new ArrayList<>();
+        ArrayList<BorneCard> borneDeck = new ArrayList<>();
         ArrayList<Card> defenseDeck = new ArrayList<>();
-        ArrayList<Card> botteDeck = new ArrayList<>();
+        ArrayList<BotteCard> botteDeck = new ArrayList<>();
         Random rand = new Random();
 
         for(Card card : deck){
-            if(card.getClass() == AttackCard.class){
-                attackDeck.add(card);
+            if(card instanceof AttackCard){
+                attackDeck.add((AttackCard) card);
             }
-            else if(card.getClass() == BorneCard.class){
-                borneDeck.add(card);
+            else if(card instanceof BorneCard){
+                borneDeck.add((BorneCard) card);
             }
-            else if(card.getClass() == BotteCard.class){
-                botteDeck.add(card);
+            else if(card instanceof BotteCard){
+                botteDeck.add((BotteCard) card);
             }
             else{
                 defenseDeck.add(card);
@@ -45,9 +45,9 @@ public class AggressiveCPUPlayer extends CPUPlayer {
         }
 
         if((!attackDeck.isEmpty()) && (rand.nextDouble() < 0.7)){
-            ArrayList<SimpleEntry<Player,Card>> attackList = new ArrayList<>();
+            ArrayList<SimpleEntry<Player,AttackCard>> attackList = new ArrayList<>();
             for(Player opponent : opponents){
-                for(Card card : attackDeck){
+                for(AttackCard card : attackDeck){
                     if(card.isPlayable(opponent)){
                         attackList.add(new SimpleEntry<>(opponent, card));
                     }
@@ -55,7 +55,7 @@ public class AggressiveCPUPlayer extends CPUPlayer {
             }
 
             if(!attackList.isEmpty()){
-                SimpleEntry<Player, Card> attack = attackList.get(rand.nextInt(attackList.size()));
+                SimpleEntry<Player, AttackCard> attack = attackList.get(rand.nextInt(attackList.size()));
                 attack.getValue().action(attack.getKey());
                 playCard();
                 delCard(attack.getValue());
@@ -64,8 +64,8 @@ public class AggressiveCPUPlayer extends CPUPlayer {
         }
 
         if(!borneDeck.isEmpty()){
-            ArrayList<Card> borneList = new ArrayList<>();
-            for(Card card : borneDeck){
+            ArrayList<BorneCard> borneList = new ArrayList<>();
+            for(BorneCard card : borneDeck){
                 if(card.isPlayable(this)){
                     borneList.add(card);
                 }
@@ -100,9 +100,9 @@ public class AggressiveCPUPlayer extends CPUPlayer {
         }
 
         if(!botteDeck.isEmpty()){
-            ArrayList<Card> botteList = new ArrayList<>();
-            for(Card card : botteDeck){
-                if((boolean) ((BotteCard) card.isCoupFourre(this))){
+            ArrayList<BotteCard> botteList = new ArrayList<>();
+            for(BotteCard card : botteDeck){
+                if((boolean) card.isCoupFourre(this)){
                     botteList.add(card);
                 }
             }
@@ -110,14 +110,16 @@ public class AggressiveCPUPlayer extends CPUPlayer {
             if(!botteList.isEmpty()){
                 Card card = botteList.get(rand.nextInt(botteList.size()));
                 card.action(this);
-                playCard(card);
+                playCard();
+                delCard(card);
                 return card;
             } 
             
             else if(rand.nextDouble() < 0.5){
                 Card card = botteDeck.get(rand.nextInt(botteDeck.size()));
                 card.action(this);
-                playCard(card);
+                playCard();
+                delCard(card);
                 return card;
             }
         }
@@ -133,7 +135,8 @@ public class AggressiveCPUPlayer extends CPUPlayer {
             if(!defenseList.isEmpty()){
                 Card card = defenseList.get(rand.nextInt(defenseList.size()));
                 card.action(this);
-                playCard(card);
+                playCard();
+                delCard(card);
                 return card;
             }
         }
@@ -145,7 +148,9 @@ public class AggressiveCPUPlayer extends CPUPlayer {
                 card = null;
             }
         }
-        discardCard(card);
+
+        discardCard();
+        delCard(card);
         return card;
     }
 }
