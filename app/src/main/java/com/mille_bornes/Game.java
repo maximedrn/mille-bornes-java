@@ -3,6 +3,7 @@ package com.mille_bornes;
 import java.util.ArrayList;
 
 import com.mille_bornes.game.cards.Card;
+import com.mille_bornes.game.database.DataBaseDAO;
 import com.mille_bornes.game.players.Player;
 
 public class Game {
@@ -12,13 +13,15 @@ public class Game {
 
     private ArrayList<Player> players;
 
+    private int dbDAO;
+
     private ArrayList<Card> pit;
 
     private ArrayList<Card> deck;
 
     private int round;
 
-    Game(){
+    Game(Player player, DataBaseDAO dbDAO){
 
     }
 
