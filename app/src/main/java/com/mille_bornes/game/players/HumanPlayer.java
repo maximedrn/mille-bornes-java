@@ -55,6 +55,13 @@ public class HumanPlayer extends Player {
         return card;
     }
 
+    /**
+     * Plays a card against an opponent or oneself.
+     *
+     * @param card the card to be played
+     * @param opponent the opponent player
+     * @return true if the card was successfully played, false otherwise
+     */
     public boolean play(Card card, Player opponent){
         if(card instanceof AttackCard){
             if(card.isPlayable(opponent)){
