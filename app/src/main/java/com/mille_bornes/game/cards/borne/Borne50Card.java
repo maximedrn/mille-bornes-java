@@ -14,7 +14,7 @@ public class Borne50Card extends BorneCard {
      * {@inheritDoc}
      */
     public boolean isPlayable(Player player) {
-        return !player.hasState(StateEnum.ARRET) && !player.hasState(StateEnum.CREVAISON) && !player.hasState(StateEnum.PANNE) && !player.hasState(StateEnum.ACCIDENT);
+        return !player.hasState(StateEnum.ARRET) && !player.hasState(StateEnum.CREVAISON) && !player.hasState(StateEnum.PANNE) && !player.hasState(StateEnum.ACCIDENT) && (player.getGameScore() + getBorneValue() <= 700);
     }
 
 }

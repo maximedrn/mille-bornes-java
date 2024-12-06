@@ -24,5 +24,5 @@ public abstract class CPUPlayer extends Player {
      * @param opponents a list of Player objects representing the opponents
      * @return a Card object representing the card chosen by the CPU player
      */
-    public abstract Card cpustrategy(List<Player> opponents);
+    public abstract Card CPUStrategy(List<Player> opponents);
 }

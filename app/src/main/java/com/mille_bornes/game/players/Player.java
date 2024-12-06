@@ -4,6 +4,8 @@ import com.mille_bornes.game.cards.*;
 import com.mille_bornes.game.utils.StateEnum;
 import java.util.ArrayList;
 
+import javax.smartcardio.Card;
+
 /**
  * Abstract class representing a player in the Mille Bornes game.
  */
@@ -101,6 +103,21 @@ public abstract class Player {
     }
 
     /**
+     * Retrieves an index from the player's deck at the specified card.
+     * 
+     * @param card the card whose index is wanted
+     * @return the index at the specified card, or -1 if card is not in deck
+     */
+    public int getCardIndex(Card card){
+        for(int i = 0; i < deck.size(); i++){
+            if(deck.get(i).getClass() == card.getClass()){
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    /**
      * Removes a card from the player's deck at the specified index.
      * 
      * @param index the index of the card to be removed
@@ -118,7 +135,12 @@ public abstract class Player {
      */
     public void delCard(Card card){
         if((card != null) && (hasCard(card))){
-            deck.remove(card);
+            for(Card c : deck){
+                if(c.getClass() == card.getClass()){
+                    deck.remove(c);
+                    break;
+                }
+            }
         }
     }
 
@@ -145,7 +167,12 @@ public abstract class Player {
      * @return true if the card is in the deck, false otherwise
      */
     public boolean hasCard(Card card){
-        return deck.contains(card);
+        for(Card c : deck){
+            if(c.getClass() == card.getClass()){
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -157,6 +184,17 @@ public abstract class Player {
     public StateEnum getState(int index){
         return ((index > -1) && (index < states.size()))? states.get(index) : null;
     }
+
+    /**
+     * Retrieves an index from the player's states at the specified state.
+     * 
+     * @param state the state whose index is wanted
+     * @return the index at the specified state, or -1 if state is not in states
+     */
+    public int getStateIndex(StateEnum state){
+        return states.indexOf(state);
+    }
+
 
     /**
      * Adds a state to the player's states.
@@ -236,31 +274,21 @@ public abstract class Player {
     }
 
     /**
-     * Plays a card from the player's deck at the specified index.
+     * Plays a card from the player's deck.
      * 
-     * @param index the index of the card to be played
-     * @return the played card
      */
-    public Card playCard(int index){
-        Card card = getCard(index);
-        delCard(index);
+    public void playCard(){
         play = true;
         discard = false;
-        return card;
     }
 
     /**
-     * Discards a card from the player's deck at the specified index.
+     * Discards a card from the player's deck.
      * 
-     * @param index the index of the card to be discarded
-     * @return the discarded card
      */
-    public Card discardCard(int index){
-        Card card = getCard(index);
-        delCard(index);
+    public void discardCard(){
         discard = true;
         play = false;
-        return card;
     }
 
     /**

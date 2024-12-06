@@ -1,6 +1,7 @@
 package com.mille_bornes.game.players;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 import java.util.AbstractMap.SimpleEntry;
@@ -9,6 +10,7 @@ import com.mille_bornes.game.cards.Card;
 import com.mille_bornes.game.cards.attack.AttackCard;
 import com.mille_bornes.game.cards.borne.BorneCard;
 import com.mille_bornes.game.cards.botte.BotteCard;
+import com.mille_bornes.game.utils.StateEnum;
 
 public class AggressiveCPUPlayer extends CPUPlayer {
     public AggressiveCPUPlayer(){
@@ -18,7 +20,7 @@ public class AggressiveCPUPlayer extends CPUPlayer {
     /**
      * {@inheritDoc}
      */
-    public Card cpustrategy(List<Player> opponents) {
+    public Card CPUStrategy(List<Player> opponents) {
         ArrayList<Card> attackDeck = new ArrayList<>();
         ArrayList<Card> borneDeck = new ArrayList<>();
         ArrayList<Card> defenseDeck = new ArrayList<>();
@@ -53,15 +55,91 @@ public class AggressiveCPUPlayer extends CPUPlayer {
             if(!attackList.isEmpty()){
                 SimpleEntry<Player, Card> attack = attackList.get(rand.nextInt(attackList.size()));
                 attack.getValue().action(attack.getKey());
+                playCard(attack.getValue());
                 return attack.getValue();
             }
         }
 
-        ArrayList<Card> borneList = new ArrayList<>();
-        for(Card card : borneDeck){
-            
+        if(!borneDeck.isEmpty()){
+            ArrayList<Card> borneList = new ArrayList<>();
+            for(Card card : borneDeck){
+                if(card.isPlayable(this)){
+                    borneList.add(card);
+                }
+            }
+
+            if(!borneList.isEmpty()){
+                if(this.hasState(StateEnum.LIMITATION)){
+                    if((this.hasCard(new PrioritaryCard())) && (rand.nextDouble() < 0.5)){
+                        Card card = getCard(getCardIndex(new PrioritaryCard()));
+                        card.action(this);
+                        playCard(card);
+                        return card;
+                    }
+
+                    if((this.hasCard(new EndLimitCard())) && (rand.nextDouble() < 0.5)){
+                        Card card = getCard(getCardIndex(new EndLimitCard()));
+                        card.action(this);
+                        playCard(card);
+                        return card;
+                    }
+                }
+
+                borneList.sort(Comparator.reverseOrder());
+                Card card = borneList.get(0);
+                card.action(this);
+                playCard(card);
+                return card;
+            }
         }
 
-        return null;
+        if(!botteDeck.isEmpty()){
+            ArrayList<Card> botteList = new ArrayList<>();
+            for(Card card : botteDeck){
+                if((BotteCard) card.isCoupFourre(this)){
+                    botteList.add(card);
+                }
+            }
+
+            if(!botteList.isEmpty()){
+                Card card = botteList.get(rand.nextInt(botteList.size()));
+                card.action(this);
+                playCard(card);
+                return card;
+            } 
+            
+            else if(rand.nextDouble() < 0.5){
+                Card card = botteDeck.get(rand.nextInt(botteDeck.size()));
+                card.action(this);
+                playCard(card);
+                return card;
+            }
+        }
+
+        if(!defenseDeck.isEmpty()){
+            ArrayList<Card> defenseList = new ArrayList<>();
+            for(Card card : defenseDeck){
+                if(card.isPlayable(this)){
+                    defenseList.add(card);
+                }
+            }
+
+            if(!defenseList.isEmpty()){
+                Card card = defenseList.get(rand.nextInt(defenseList.size()));
+                card.action(this);
+                playCard(card);
+                return card;
+            }
+        }
+
+        Card card = null;
+        while(card == null){
+            card = getCard(rand.nextInt(deckSize()));
+            if(card.getClass() == BotteCard.class){
+                card = null;
+            }
+        }
+        discardCard(card);
+        return card;
     }
 }

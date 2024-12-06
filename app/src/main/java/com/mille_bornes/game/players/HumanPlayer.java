@@ -9,6 +9,12 @@ import com.mille_bornes.game.cards.Card;
  * specific to human players.
  */
 public class HumanPlayer extends Player {
+
+    private boolean hasPlayed;
+
+    private Card cardPlayed;
+
+    private Player oppenentSelected;
     
     /**
      * Constructs a new HumanPlayer with the specified name.
@@ -17,15 +23,35 @@ public class HumanPlayer extends Player {
      */
     public HumanPlayer(String name){
         super(name);
+        hasPlayed = false;
+        cardPlayed = null;
+        oppenentSelected = null;
     }
 
     /**
      * Allows the human player to select an action based on the current game state.
      *
-     * @param opponents a list of opponent players
      * @return the selected Card action by the human player
      */
-    public Card selectionAction(List<Player> opponents){
-        return null;
+    public Card selectAction(){
+        while(!hasPlayed){
+            // Wait for user to play
+        }
+        
+        Card card = cardPlayed;
+        cardPlayed = null;
+        if(getPlay()){
+            if(oppenentSelected != null){
+                card.action(oppenentSelected);
+                oppenentSelected = null;
+            }
+
+            else{
+                card.action(this);
+            }
+        }
+        
+        delCard(card);
+        return card;
     }
 }
