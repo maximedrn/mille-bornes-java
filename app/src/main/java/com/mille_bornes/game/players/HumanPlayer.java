@@ -50,8 +50,8 @@ public class HumanPlayer extends Player {
                 card.action(this);
             }
         }
-        
         delCard(card);
+        hasPlayed = false;
         return card;
     }
 
@@ -66,6 +66,7 @@ public class HumanPlayer extends Player {
         if(card instanceof AttackCard){
             if(card.isPlayable(opponent)){
                 card.action(opponent);
+                hasPlayed = true;
                 return true;
             }
         }
@@ -73,6 +74,7 @@ public class HumanPlayer extends Player {
         else {
             if(card.isPlayable(this)){
                 card.action(this);
+                hasPlayed = true;
                 return true;
             }
         }
