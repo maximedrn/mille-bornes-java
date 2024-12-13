@@ -295,7 +295,7 @@ public abstract class Player {
      * @return a string containing player details
      */
     public String toString(){
-        String string = "Player : {\n\tname : " + name + ",\n\tgameScore : " + gameScore + ",\n\tglobalScore : " + globalScore + ",\n\tdeck : {";
+        String string = "\tPlayer : {\n\t\tname : " + name + ",\n\t\tgameScore : " + gameScore + ",\n\t\tglobalScore : " + globalScore + ",\n\t\tdeck : {";
         
         if(deckSize() > 0){
             for(int i = 0; i < deckSize() - 1; i++){
@@ -304,7 +304,7 @@ public abstract class Player {
             string += getCard(deckSize() - 1);
         }
 
-        string += "},\n\tstates : {";
+        string += "},\n\t\tstates : {";
         
         if(statesSize() > 0){
             for(int i = 0; i < statesSize() - 1; i++){
@@ -313,7 +313,7 @@ public abstract class Player {
             string += getCard(statesSize() - 1);
         }
 
-        string += "},\n\taction : ";
+        string += "},\n\t\taction : ";
         
         if(play && !discard){
             string += "play";
@@ -321,6 +321,6 @@ public abstract class Player {
             string += "discard";
         }
 
-        return string += "\n}";
+        return string += "\n\t}";
     }
 }
