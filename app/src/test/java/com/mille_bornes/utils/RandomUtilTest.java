@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 public class RandomUtilTest {
 
     @Test
-    public static void testUuid() {
+    public void testUuid() {
         final String uuid1 = RandomUtil.uuid();
         final String uuid2 = RandomUtil.uuid();
         assertNotEquals(uuid1, uuid2);

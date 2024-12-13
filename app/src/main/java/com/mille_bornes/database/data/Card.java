@@ -1,52 +1,31 @@
 package com.mille_bornes.database.data;
 
+import com.mille_bornes.constants.CardType;
+import com.mille_bornes.constants.Exceptions;
+import com.mille_bornes.database.DatabaseUtil;
+import com.mille_bornes.database.data.helper.OrderedDatabaseTable;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 
-enum CardType {
-    BORN,
-    ATTACK,
-    DEFENSE,
-    SPEED_LIMIT,
-    STOP;
-
-    /**
-     * @return the lowercase name of the enum constant.
-     */
-    @Override
-    public String toString() {
-        return this.name().toLowerCase();
-    }
-}
-
-
+/**
+ * Represents a card in the game. Stored in the database.
+ * Do not use this class directly, use the {@link DatabaseUtil} class instead.
+ */
 @Entity
 @Table(name = "cards")
-public class Card {
+public class Card extends OrderedDatabaseTable<Card> {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
-
-    @ManyToOne
-    @JoinColumn(name = "game_id", nullable = false)
-    private Game game;
-
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "round_id", nullable = false)
     private Round round;
 
-    /**
-     * If null, the card is in the deck.
-     */
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "player_id", nullable = true)
     private Player player;
 
@@ -56,72 +35,47 @@ public class Card {
     @Column(nullable = true)
     private Integer value;
 
-    public Card(
-        final Game game,
-        final Round round,
-        final Player player,
-        final CardType type,
-        final Integer value
-    ) {
-        this.game = game;
-        this.round = round;
+    public Card() {}
+
+    /**
+     * Constructor for cards in the player's hand.
+     * @param player The player that has the card (can be null).
+     * @param type The type of the card.
+     * @param value The value of the card (can be null).
+     */
+    public Card(final Player player, final CardType type) {
+        assert type != null : Exceptions.CARD_TYPE_CANNOT_BE_NULL;
         this.player = player;
         this.type = type.toString();
-        this.value = value;
+        this.value = type.getValue();
     }
 
-    public Card(
-        final Game game,
-        final Round round,
-        final Player player,
-        final CardType type
-    ) {
-        this.game = game;
-        this.round = round;
-        this.player = player;
-        this.type = type.toString();
-        this.value = null;
-    }
-
-    public Card(
-        final Game game,
-        final Round round,
-        final CardType type,
-        final Integer value
-    ) {
-        this.game = game;
-        this.round = round;
-        this.player = null;
-        this.type = type.toString();
-        this.value = value;
-    }
-
-    public Card(
-        final Game game,
-        final Round round,
-        final CardType type
-    ) {
-        this.game = game;
-        this.round = round;
-        this.player = null;
-        this.type = type.toString();
-        this.value = null;
-    }
-
-    public String getId() {
-        return this.id;
-    }
-
-    public Game getGame() {
-        return this.game;
+    /**
+     * Constructor for cards in the deck.
+     * @param type The type of the card.
+     * @param value The value of the card.
+     */
+    public Card(final CardType type) {
+        this(null, type);
     }
 
     public Round getRound() {
         return this.round;
     }
 
+    public void setRound(final Round round) {
+        assert round != null : Exceptions.ROUND_CANNOT_BE_NULL;
+        this.round = round;
+    }
+
     public Player getPlayer() {
         return this.player;
+    }
+
+    public void setPlayer(final Player player) {
+        assert player != null : Exceptions.PLAYER_CANNOT_BE_NULL;
+        this.player = player;
+        this.removeIndex(); // Reset the index from the deck.
     }
 
     public CardType getType() {
@@ -130,5 +84,11 @@ public class Card {
 
     public Integer getValue() {
         return this.value;
+    }
+
+    public String toString() {
+        final String type = this.getType().toString();
+        final Integer value = this.getValue();
+        return String.join(" ", type, value.toString());
     }
 }

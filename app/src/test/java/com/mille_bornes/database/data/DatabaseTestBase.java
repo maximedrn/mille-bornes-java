@@ -1,41 +1,54 @@
 package com.mille_bornes.database.data;
 
 import org.hibernate.Session;
-import org.hibernate.Transaction;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterAll;
 
 import com.mille_bornes.database.HibernateUtil;
+import com.mille_bornes.database.data.helper.DatabaseTable;
 
 
 /**
  * Base class for database tests. Opens a session and a transaction 
  * before each test and closes them after each test.
  */
-public class DatabaseTestBase {
+public abstract class DatabaseTestBase {
 
-    private Session session;
-    private Transaction transaction;
-
-    /**
-     * Opens a session and a transaction before each test.
-     */
-    @BeforeEach
-    public void beforeEach() {
-        this.session = HibernateUtil.open();
-        this.transaction = this.session.beginTransaction();
-    }
+    public static String id;
 
     /**
-     * Closes the session and the transaction after each test.
+     * Utility method preventing code duplication in tests.
+     * Begins a transaction, persists the table, and commits the transaction.
+     * Then sets the id of the table for further testing.
+     * @param table The table to persist.
      */
-    @AfterEach
-    public void afterEach() {
-        this.transaction.commit();
-        this.session.close();
+    public static void persist(final DatabaseTable<?> table) {
+        final Session session = HibernateUtil.open();
+        try {
+            session.beginTransaction();
+            session.persist(table);
+            session.getTransaction().commit();
+            DatabaseTestBase.id = table.getId();
+        } finally {
+            session.close();
+        }
     }
 
     public Session getSession() {
-        return this.session;
+        return HibernateUtil.open();
+    }
+
+    public Session startTransaction() {
+        final Session session = this.getSession();
+        session.beginTransaction();
+        return session;
+    }
+
+    public void endTransaction(final Session session) {
+        session.getTransaction().commit();
+    }
+
+    @AfterAll
+    public static void afterAll() {
+        HibernateUtil.close();
     }
 }

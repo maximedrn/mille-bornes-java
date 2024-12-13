@@ -17,9 +17,9 @@ public class HibernateUtil {
     private static final SessionFactory sessionFactory;
     private static final Class<?>[] classes = {
         com.mille_bornes.database.data.Game.class,
-        com.mille_bornes.database.data.Player.class,
-        com.mille_bornes.database.data.Card.class,
         com.mille_bornes.database.data.Round.class,
+        com.mille_bornes.database.data.Card.class,
+        com.mille_bornes.database.data.Player.class,
     };
 
     static {

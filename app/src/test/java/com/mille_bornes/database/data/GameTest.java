@@ -1,103 +1,79 @@
 package com.mille_bornes.database.data;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.hibernate.Session;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.mille_bornes.constants.GameStatus;
 
+
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class GameTest extends DatabaseTestBase {
 
-    private final Game game = new Game();
+    @BeforeAll
+    public static void beforeAll() {
+        final Game game = new Game();
+        RoundTest.persist(game);
+    }
+
+    private Game getGame(Session session) {
+        return session.get(Game.class, id);
+    }
 
     @Test
     public void testGetId() {
-        final Session session = this.getSession();
-        if (this.game.getId() == null) session.persist(this.game);
-        assertNotNull(this.game.getId());
+        final Game game = this.getGame(this.getSession());
+        assertNotNull(game.getId());
+        assertEquals(GameTest.id, game.getId());
     }
 
     @Test
+    @Order(1)
     public void testGetStatus() {
-        assertEquals(GameStatus.IN_PROGRESS, this.game.getStatus());
+        final Game game = this.getGame(this.getSession());
+        assertEquals(GameStatus.IN_PROGRESS, game.getStatus());
     }
 
     @Test
+    @Order(2)
     public void testSetStatus() {
-        this.game.setStatus(GameStatus.FINISHED);
-        assertEquals(GameStatus.FINISHED, this.game.getStatus());
+        final Session session = this.startTransaction();
+        final Game game = this.getGame(session);
+        game.setStatus(GameStatus.FINISHED);
+        this.endTransaction(session);
+        assertEquals(GameStatus.FINISHED, game.getStatus());
     }
 
     @Test
-    public void testGetPlayers() {
-        assertNotNull(this.game.getPlayers());
-        assertTrue(this.game.getPlayers().isEmpty());
-    }
-
-    @Test
-    public void testAddPlayer() {
-        final Player player = new Player(this.game, "Player 0");
-        this.game.addPlayer(player);
-        assertEquals(1, this.game.getPlayers().size());
-        assertTrue(this.game.getPlayers().contains(player));
-    }
-
-    @Test
-    public void testAddPlayers() {
-        final List<Player> players = new ArrayList<Player>();
-        players.add(new Player(this.game, "Player 1"));
-        players.add(new Player(this.game, "Player 2"));
-        this.game.addPlayers(players);
-        assertEquals(2, this.game.getPlayers().size());
-        assertTrue(this.game.getPlayers().containsAll(players));
-    }
-
-    @Test
-    public void testGetCards() {
-        assertNotNull(this.game.getCards());
-        assertTrue(this.game.getCards().isEmpty());
-    }
-
-    @Test
-    public void testAddCard() {
-        final Player player = new Player(this.game, "Player 0");
-        final Round round = new Round(this.game, 0, player);
-        final Card card = new Card(this.game, round, CardType.ATTACK);
-        this.game.addCard(card);
-        assertEquals(1, this.game.getCards().size());
-        assertTrue(this.game.getCards().contains(card));
-    }
-
-    @Test
-    public void testAddCards() {
-        final Player player = new Player(this.game, "Player 0");
-        final Round round = new Round(this.game, 0, player);
-        final Card card1 = new Card(this.game, round, CardType.ATTACK);
-        final Card card2 = new Card(this.game, round, CardType.DEFENSE);
-        final List<Card> cards = new ArrayList<Card>();
-        cards.addAll(List.of(card1, card2));
-        this.game.addCards(cards);
-        assertEquals(2, this.game.getCards().size());
-        assertTrue(this.game.getCards().containsAll(cards));
-    }
-
-    @Test
+    @Order(3)
     public void testGetRounds() {
-        assertNotNull(this.game.getRounds());
-        assertTrue(this.game.getRounds().isEmpty());
+        final Game game = this.getGame(this.getSession());
+        assertNotNull(game.getRounds());
+        assertTrue(game.getRounds().isEmpty());
     }
 
     @Test
+    @Order(4)
     public void testAddRound() {
-        final Player player = new Player(this.game, "Player 0");
-        final Round round = new Round(this.game, 0, player);
-        this.game.addRound(round);
-        assertEquals(1, this.game.getRounds().size());
-        assertTrue(this.game.getRounds().contains(round));
+        final Session session = this.startTransaction();
+        final Game game = this.getGame(session);
+        final Round round = new Round(0);
+        game.addRound(round);
+        this.endTransaction(session);
+        assertEquals(1, game.getRounds().size());
+        assertTrue(game.getRounds().contains(round));
+    }
+
+    @Test
+    @Order(Integer.MAX_VALUE)
+    public void testToString() {
+        System.out.println(this.getGame(this.getSession()));
     }
 }
