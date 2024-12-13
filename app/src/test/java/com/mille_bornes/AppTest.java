@@ -1,10 +1,12 @@
 package com.mille_bornes;
 
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class AppTest {
-    @Test public void main() {
-        assertEquals(1 + 1, 2);
+
+    @Test
+    public static void testMain(String[] args) {
+        assertEquals(2, 1 + 1);
     }
 }
