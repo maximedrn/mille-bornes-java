@@ -22,11 +22,12 @@ public class SpeedyCPUPlayer extends CPUPlayer {
     /**
      * {@inheritDoc}
      */
-    public Card CPUStrategy(List<Player> opponents) {
+    public List<Object> CPUStrategy(List<Player> opponents) {
         ArrayList<AttackCard> attackDeck = new ArrayList<>();
         ArrayList<BorneCard> borneDeck = new ArrayList<>();
         ArrayList<Card> defenseDeck = new ArrayList<>();
         ArrayList<BotteCard> botteDeck = new ArrayList<>();
+        ArrayList<Object> returnList = new ArrayList<>();
         Random rand = new Random();
 
         for(Card card : deck){
@@ -59,7 +60,9 @@ public class SpeedyCPUPlayer extends CPUPlayer {
                         card.action(this);
                         playCard();
                         delCard(card);
-                        return card;
+                        returnList.add(card);
+                        returnList.add(null);
+                        return returnList;
                     }
 
                     if((this.hasCard(new EndLimitCard())) && (rand.nextDouble() < 0.5)){
@@ -67,7 +70,9 @@ public class SpeedyCPUPlayer extends CPUPlayer {
                         card.action(this);
                         playCard();
                         delCard(card);
-                        return card;
+                        returnList.add(card);
+                        returnList.add(null);
+                        return returnList;
                     }
                 }
 
@@ -76,7 +81,9 @@ public class SpeedyCPUPlayer extends CPUPlayer {
                 card.action(this);
                 playCard();
                 delCard(card);
-                return card;
+                returnList.add(card);
+                returnList.add(null);
+                return returnList;
             }
         }
 
@@ -93,7 +100,9 @@ public class SpeedyCPUPlayer extends CPUPlayer {
                 card.action(this);
                 playCard();
                 delCard(card);
-                return card;
+                returnList.add(card);
+                returnList.add(null);
+                return returnList;
             } 
             
             else if(rand.nextDouble() < 0.5){
@@ -101,7 +110,9 @@ public class SpeedyCPUPlayer extends CPUPlayer {
                 card.action(this);
                 playCard();
                 delCard(card);
-                return card;
+                returnList.add(card);
+                returnList.add(null);
+                return returnList;
             }
         }
 
@@ -118,7 +129,9 @@ public class SpeedyCPUPlayer extends CPUPlayer {
                 card.action(this);
                 playCard();
                 delCard(card);
-                return card;
+                returnList.add(card);
+                returnList.add(null);
+                return returnList;
             }
         }
 
@@ -137,20 +150,24 @@ public class SpeedyCPUPlayer extends CPUPlayer {
                 attack.getValue().action(attack.getKey());
                 playCard();
                 delCard(attack.getValue());
-                return attack.getValue();
+                returnList.add(attack.getValue());
+                returnList.add(attack.getKey());
+                return returnList;
             }
         }
 
         Card card = null;
         while(card == null){
             card = getCard(rand.nextInt(deckSize()));
-            if(card.getClass() == BotteCard.class){
+            if(card instanceof BotteCard){
                 card = null;
             }
         }
 
         discardCard();
         delCard(card);
-        return card;
+        returnList.add(card);
+        returnList.add(null);
+        return returnList;
     }
 }

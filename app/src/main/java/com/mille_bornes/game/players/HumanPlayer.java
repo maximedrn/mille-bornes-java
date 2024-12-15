@@ -1,5 +1,8 @@
 package com.mille_bornes.game.players;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.mille_bornes.game.cards.Card;
 import com.mille_bornes.game.cards.attack.AttackCard;
 
@@ -31,28 +34,27 @@ public class HumanPlayer extends Player {
     /**
      * Allows the human player to select an action based on the current game state.
      *
-     * @return the selected Card action by the human player
+     * @return the selected Card by the human player and the selected opponent
      */
-    public Card selectAction(){
+    public List<Object> selectAction(){
         while(!hasPlayed){
             // Wait for user to play
         }
+        ArrayList<Object> returnList = new ArrayList<>();
         
         Card card = cardPlayed;
         cardPlayed = null;
-        if(getPlay()){
-            if(oppenentSelected != null){
-                card.action(oppenentSelected);
-                oppenentSelected = null;
-            }
+        returnList.add(card);
 
-            else{
-                card.action(this);
-            }
+        Player player = oppenentSelected;
+        if(oppenentSelected != null){
+            oppenentSelected = null;
         }
+        returnList.add(player);
+
         delCard(card);
         hasPlayed = false;
-        return card;
+        return returnList;
     }
 
     /**
@@ -63,20 +65,36 @@ public class HumanPlayer extends Player {
      * @return true if the card was successfully played, false otherwise
      */
     public boolean play(Card card, Player opponent){
-        if(card instanceof AttackCard){
-            if(card.isPlayable(opponent)){
-                card.action(opponent);
-                hasPlayed = true;
-                return true;
+        if((card != null) && (hasCard(card))){
+            if(card instanceof AttackCard){
+                if((opponent != null) && (card.isPlayable(opponent))){
+                    card.action(opponent);
+                    cardPlayed = card;
+                    hasPlayed = true;
+                    playCard();
+                    return true;
+                }
+            }
+    
+            else {
+                if(card.isPlayable(this)){
+                    card.action(this);
+                    cardPlayed = card;
+                    hasPlayed = true;
+                    playCard();
+                    return true;
+                }
             }
         }
+        return false;
+    }
 
-        else {
-            if(card.isPlayable(this)){
-                card.action(this);
-                hasPlayed = true;
-                return true;
-            }
+    public boolean discard(Card card){
+        if((card != null) && (hasCard(card))){
+            cardPlayed = card;
+            hasPlayed = true;
+            discardCard();
+            return true;
         }
         return false;
     }
