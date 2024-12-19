@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
-import com.mille_bornes.constants.CardType;
+import com.mille_bornes.core.cards.hazard.CardAccident;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -61,8 +61,8 @@ public class RoundTest extends DatabaseTestBase {
     public void addCards() {
         final Session session = this.startTransaction();
         final Round round = this.getRound(session);
-        final Card firstCard = new Card(CardType.ACCIDENT);
-        final Card secondCard = new Card(CardType.MILEAGE_100);
+        final Card firstCard = new CardAccident();
+        final Card secondCard = new CardAccident();
         round.addCards(List.of(firstCard, secondCard));
         this.endTransaction(session);
         assertEquals(2, round.getCards().size());

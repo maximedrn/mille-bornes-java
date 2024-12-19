@@ -19,7 +19,7 @@ public abstract class OrderedDatabaseTable<T> extends DatabaseTable<T> {
      * reserved keyword "index" in SQL.
      */
     @Column(name = "key_index", nullable = true)
-    private Integer index;
+    protected Integer index;
 
     public OrderedDatabaseTable() {}
 

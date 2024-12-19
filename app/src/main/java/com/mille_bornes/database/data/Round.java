@@ -9,7 +9,8 @@ import jakarta.persistence.Table;
 
 import java.util.List;
 
-import com.mille_bornes.database.data.helper.DatabaseArray;
+import com.mille_bornes.database.DatabaseUtil;
+import com.mille_bornes.database.data.helper.DatabaseList;
 import com.mille_bornes.database.data.helper.OrderedDatabaseTable;
 
 
@@ -21,7 +22,7 @@ import com.mille_bornes.database.data.helper.OrderedDatabaseTable;
 @Table(name = "rounds")
 public class Round extends OrderedDatabaseTable<Round> {
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     @JoinColumn(name = "game_id", nullable = false)
     private Game game;
 
@@ -30,7 +31,7 @@ public class Round extends OrderedDatabaseTable<Round> {
         cascade = CascadeType.ALL,
         orphanRemoval = true
     )
-    private List<Card> cards = new DatabaseArray<Card>();
+    private List<DeckCard> cards = new DatabaseList<DeckCard>();
 
     public Round() {
         super();
@@ -53,13 +54,13 @@ public class Round extends OrderedDatabaseTable<Round> {
      * be a card from the deck, a card from the player's hand or stack.
      * @return A list of all the cards, and their state, in the round.
      */
-    public List<Card> getCards() {
+    public List<DeckCard> getCards() {
         return this.cards;
     }
 
-    private void addCard(final Card card) {
-        this.cards.add(card);
+    public void addCard(final Card card) {
         card.setRound(this);
+        this.cards.add(new DeckCard(card));
     }
 
     public void addCards(final List<Card> cards) {

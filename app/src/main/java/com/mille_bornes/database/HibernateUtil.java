@@ -18,7 +18,9 @@ public class HibernateUtil {
     private static final Class<?>[] classes = {
         com.mille_bornes.database.data.Game.class,
         com.mille_bornes.database.data.Round.class,
-        com.mille_bornes.database.data.Card.class,
+        com.mille_bornes.database.data.DeckCard.class,
+        com.mille_bornes.database.data.StackCard.class,
+        com.mille_bornes.database.data.HandCard.class,
         com.mille_bornes.database.data.Player.class,
     };
 
@@ -51,9 +53,15 @@ public class HibernateUtil {
     }
 
     /**
-     * Closes the Hibernate SessionFactory.
+     * Ensures the SessionFactory is closed when the instance is garbage 
+     * collected.
      */
-    public static void close() {
-        HibernateUtil.sessionFactory.close();
+    @Override
+    protected void finalize() throws Throwable {
+        try {
+            HibernateUtil.sessionFactory.close();
+        } catch (final Throwable exception) {
+            System.err.println(exception);
+        }
     }
 }

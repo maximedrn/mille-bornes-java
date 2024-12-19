@@ -13,13 +13,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-import com.mille_bornes.constants.CardType;
+import com.mille_bornes.constants.cards.CardType;
+import com.mille_bornes.core.cards.hazard.CardAccident;
 
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class CardTest extends DatabaseTestBase {
 
-    private static final CardType type = CardType.GASOLINE;
     private static String gameId;
 
     @BeforeAll
@@ -27,7 +27,7 @@ public class CardTest extends DatabaseTestBase {
         final Game game = new Game();
         CardTest.gameId = game.getId();
         final Round round = new Round(0);
-        final Card card = new Card(CardTest.type);
+        final Card card = new CardAccident();
         round.addCards(List.of(card));
         game.addRound(round);
         RoundTest.persist(card);
@@ -47,7 +47,7 @@ public class CardTest extends DatabaseTestBase {
     @Test
     public void testGetType() {
         final Card card = this.getCard(this.getSession());
-        assertEquals(CardTest.type.toString(), card.getType().toString());
+        assertEquals(CardType.ACCIDENT, card.getType());
     }
 
     @Test
@@ -64,7 +64,7 @@ public class CardTest extends DatabaseTestBase {
         final Card card = this.getCard(session);
         final Player player = new Player("Player 0", 0);
         player.setGame(session.get(Game.class, CardTest.gameId));
-        player.addCard(card);
+        player.addCardToHand(card);
         player.moveCardToStack(card);
         this.endTransaction(session);
         assertNotNull(card.getPlayer());

@@ -1,31 +1,29 @@
 package com.mille_bornes.database.data;
 
-import com.mille_bornes.constants.CardType;
 import com.mille_bornes.constants.Exceptions;
+import com.mille_bornes.constants.cards.CardType;
 import com.mille_bornes.database.DatabaseUtil;
 import com.mille_bornes.database.data.helper.OrderedDatabaseTable;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.MappedSuperclass;
 
 
 /**
  * Represents a card in the game. Stored in the database.
  * Do not use this class directly, use the {@link DatabaseUtil} class instead.
  */
-@Entity
-@Table(name = "cards")
-public class Card extends OrderedDatabaseTable<Card> {
+@MappedSuperclass
+public abstract class Card extends OrderedDatabaseTable<Card> {
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     @JoinColumn(name = "round_id", nullable = false)
     private Round round;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     @JoinColumn(name = "player_id", nullable = true)
     private Player player;
 
@@ -38,25 +36,26 @@ public class Card extends OrderedDatabaseTable<Card> {
     public Card() {}
 
     /**
-     * Constructor for cards in the player's hand.
-     * @param player The player that has the card (can be null).
+     * Constructor for cards in the deck.
      * @param type The type of the card.
-     * @param value The value of the card (can be null).
      */
-    public Card(final Player player, final CardType type) {
+    public Card(final CardType type) {
         assert type != null : Exceptions.CARD_TYPE_CANNOT_BE_NULL;
-        this.player = player;
         this.type = type.toString();
         this.value = type.getValue();
     }
 
-    /**
-     * Constructor for cards in the deck.
-     * @param type The type of the card.
-     * @param value The value of the card.
-     */
-    public Card(final CardType type) {
-        this(null, type);
+    public Card(final Card card) {
+        this(card.getType());
+        this.player = card.getPlayer();
+        this.round = card.getRound();
+        this.index = card.getIndex();
+    }
+
+    public abstract Boolean canBeAppliedTo(final Player player);
+
+    public StackCard applyTo(final Player player) {
+        return player.addCardToStack(this);
     }
 
     public Round getRound() {
@@ -73,7 +72,6 @@ public class Card extends OrderedDatabaseTable<Card> {
     }
 
     public void setPlayer(final Player player) {
-        assert player != null : Exceptions.PLAYER_CANNOT_BE_NULL;
         this.player = player;
         this.removeIndex(); // Reset the index from the deck.
     }
@@ -89,6 +87,7 @@ public class Card extends OrderedDatabaseTable<Card> {
     public String toString() {
         final String type = this.getType().toString();
         final Integer value = this.getValue();
-        return String.join(" ", type, value.toString());
+        final String valueString = value == null ? "" : value.toString();
+        return String.join(" ", type, valueString);
     }
 }

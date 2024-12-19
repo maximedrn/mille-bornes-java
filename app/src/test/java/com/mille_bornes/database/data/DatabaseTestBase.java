@@ -1,7 +1,6 @@
 package com.mille_bornes.database.data;
 
 import org.hibernate.Session;
-import org.junit.jupiter.api.AfterAll;
 
 import com.mille_bornes.database.HibernateUtil;
 import com.mille_bornes.database.data.helper.DatabaseTable;
@@ -45,10 +44,5 @@ public abstract class DatabaseTestBase {
 
     public void endTransaction(final Session session) {
         session.getTransaction().commit();
-    }
-
-    @AfterAll
-    public static void afterAll() {
-        HibernateUtil.close();
     }
 }

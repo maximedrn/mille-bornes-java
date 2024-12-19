@@ -12,9 +12,9 @@ import java.util.List;
 
 import com.mille_bornes.constants.Exceptions;
 import com.mille_bornes.constants.GameStatus;
-import com.mille_bornes.database.data.helper.DatabaseArray;
+import com.mille_bornes.database.data.helper.DatabaseList;
 import com.mille_bornes.database.data.helper.DatabaseTable;
-import com.mille_bornes.database.data.helper.OrderedDatabaseArray;
+import com.mille_bornes.database.data.helper.OrderedDatabaseList;
 
 
 /**
@@ -42,14 +42,14 @@ public class Game extends DatabaseTable<Game> {
         cascade = CascadeType.ALL,
         orphanRemoval = true
     )
-    private List<Round> rounds = new OrderedDatabaseArray<Round>();
+    private List<Round> rounds = new OrderedDatabaseList<Round>();
 
     @OneToMany(
         mappedBy = "game",
         cascade = CascadeType.ALL,
         orphanRemoval = true
     )
-    private List<Player> players = new OrderedDatabaseArray<Player>();
+    private List<Player> players = new OrderedDatabaseList<Player>();
 
     public LocalDateTime getCreatedAt() {
         return this.createdAt;
@@ -68,24 +68,24 @@ public class Game extends DatabaseTable<Game> {
         this.status = status.toString();
     }
 
-    public DatabaseArray<Round> getRounds() {
-        return new DatabaseArray<Round>(this.rounds);
+    public DatabaseList<Round> getRounds() {
+        return new DatabaseList<Round>(this.rounds);
     }
 
     public void addRound(final Round round) {
         assert round != null : Exceptions.ROUND_CANNOT_BE_NULL;
-        this.rounds.add(round);
         round.setGame(this);
+        this.rounds.add(round);
     }
 
-    public DatabaseArray<Player> getPlayers() {
-        return new DatabaseArray<Player>(this.players);
+    public DatabaseList<Player> getPlayers() {
+        return new DatabaseList<Player>(this.players);
     }
 
     public void addPlayer(final Player player) {
         assert player != null : Exceptions.PLAYER_CANNOT_BE_NULL;
-        this.players.add(player);
         player.setGame(this);
+        this.players.add(player);
     }
 
     public void addPlayers(final List<Player> players) {
