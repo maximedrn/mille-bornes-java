@@ -1,7 +1,7 @@
 # mille-bornes-java
-Graphical implementation (Swing) of the Mille Bornes game in Java.
+Graphical implementation (JFX) of the Mille Bornes game in Java.
 
-_Java 21 / JUnit 4_
+_Java 21 / JUnit 5_
 
 ## Commands
 
