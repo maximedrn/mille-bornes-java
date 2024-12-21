@@ -7,6 +7,11 @@ repositories {
 }
 
 dependencies {
+    val javafxVersion = "20.0.1"
+    implementation("org.openjfx:javafx-base:$javafxVersion:win")
+    implementation("org.openjfx:javafx-controls:$javafxVersion:win")
+    implementation("org.openjfx:javafx-fxml:$javafxVersion:win")
+    implementation("org.openjfx:javafx-graphics:$javafxVersion:win")
     implementation("com.google.guava:guava:31.1-jre")
     implementation("org.xerial:sqlite-jdbc:3.47.1.0")
     implementation("org.hibernate.orm:hibernate-core:6.6.3.Final")

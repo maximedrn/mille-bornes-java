@@ -1,5 +1,9 @@
 # Project related files
 *.db
+app/bin/
+app/build/
+lib/
+
 
 # Compiled class file
 *.class

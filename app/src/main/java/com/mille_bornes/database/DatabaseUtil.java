@@ -30,6 +30,10 @@ public class DatabaseUtil {
         this.merge(game);
     }
 
+    public DatabaseUtil(final String gameId) {
+        this.gameId = gameId;
+    }
+
     private void merge(final DatabaseTable<?> table) {
         final Session session = HibernateUtil.open();
         session.beginTransaction();
