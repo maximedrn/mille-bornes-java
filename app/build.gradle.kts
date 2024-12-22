@@ -17,10 +17,49 @@ repositories {
 }
 
 dependencies {
+<<<<<<< Updated upstream
     // This dependency is used by the application.
     implementation(libs.guava)
 }
 
+=======
+    val javafxVersion = "20.0.1"
+
+    // JavaFX multiplateforme (Linux)
+    implementation("org.openjfx:javafx-base:$javafxVersion:linux")
+    implementation("org.openjfx:javafx-controls:$javafxVersion:linux")
+    implementation("org.openjfx:javafx-fxml:$javafxVersion:linux")
+    implementation("org.openjfx:javafx-graphics:$javafxVersion:linux")
+
+    // Google Guava
+    implementation("com.google.guava:guava:31.1-jre")
+
+    // SQLite JDBC driver
+    implementation("org.xerial:sqlite-jdbc:3.47.1.0")
+
+    // Hibernate Core & Dialects
+    implementation("org.hibernate.orm:hibernate-core:6.2.12.Final")
+    implementation("org.hibernate.orm:hibernate-community-dialects:6.2.12.Final")
+
+    // JUnit for testing
+    testImplementation("org.junit.jupiter:junit-jupiter:5.11.3")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+}
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(21)) // Utilisation de Java 21
+    }
+}
+
+application {
+    mainClass.set("com.mille_bornes.App")
+    applicationDefaultJvmArgs = listOf(
+        "--module-path", "/usr/share/openjfx/lib",
+        "--add-modules", "javafx.controls,javafx.fxml"
+    )
+}
+>>>>>>> Stashed changes
 
 testing {
     suites {
